@@ -7,6 +7,14 @@ import { HeroesComponent } from './heroes/heroes.component';
 import { HeroDetailComponent } from './hero-detail/hero-detail.component';
 import { MessagesComponent } from './messages/messages.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { FIREBASE_CONFIG } from '../environments/environment';
+import * as firebase from 'firebase/app';
+import 'firebase/analytics';
+import { HeroSearchComponent } from './hero-search/hero-search.component';
+
+// Initialize Firebase
+firebase.initializeApp(FIREBASE_CONFIG);
+firebase.analytics();
 
 @NgModule({
   declarations: [
@@ -14,7 +22,8 @@ import { DashboardComponent } from './dashboard/dashboard.component';
     HeroesComponent,
     HeroDetailComponent,
     MessagesComponent,
-    DashboardComponent
+    DashboardComponent,
+    HeroSearchComponent
   ],
   imports: [
     BrowserModule,
