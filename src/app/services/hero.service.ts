@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
-import { Hero } from './hero';
+import { Hero } from '../shared/hero';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore';
 
