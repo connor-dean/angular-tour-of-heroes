@@ -17,12 +17,12 @@ export class HeroService {
     this.messageService.add('HeroService: fetched heroes');
 
     return new Observable(observer => {
-      this.db.onSnapshot(querySnapshot => {
+      this.db.onSnapshot(heroesResults => {
         const heroes: Hero[] = [];
-        querySnapshot.forEach(doc => {
+        heroesResults.forEach(hero => {
           const tempHero: Hero = {
-            name: doc.data().name,
-            id: doc.data().id
+            name: hero.data().name,
+            id: hero.data().id
           };
           heroes.push(tempHero);
         });
@@ -39,11 +39,11 @@ export class HeroService {
 
   getHero(id: number): Observable<Hero> {
     return new Observable(observer => {
-      this.db.onSnapshot(querySnapshot => {
-        querySnapshot.forEach(doc => {
+      this.db.onSnapshot(heroesResults => {
+        heroesResults.forEach(hero => {
           const tempHero: Hero = {
-            name: doc.data().name,
-            id: doc.data().id
+            name: hero.data().name,
+            id: hero.data().id
           };
 
           if (id === tempHero.id) {
@@ -60,12 +60,12 @@ export class HeroService {
     }
 
     return new Observable(observer => {
-      this.db.onSnapshot(querySnapshot => {
+      this.db.onSnapshot(heroesResults => {
         const heroes: Hero[] = [];
-        querySnapshot.forEach(doc => {
+        heroesResults.forEach(hero => {
           const tempHero: Hero = {
-            name: doc.data().name,
-            id: doc.data().id
+            name: hero.data().name,
+            id: hero.data().id
           };
 
           if (term === tempHero.name) {

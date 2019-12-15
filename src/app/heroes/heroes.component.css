@@ -71,3 +71,10 @@ button.delete {
   background-color: gray !important;
   color: white;
 }
+
+label {
+  width: 3em;
+  margin: 0.5em 0;
+  color: #607d8b;
+  font-weight: bold;
+}
