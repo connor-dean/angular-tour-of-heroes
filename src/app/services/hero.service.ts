@@ -21,8 +21,8 @@ export class HeroService {
         const heroes: Hero[] = [];
         heroesResults.forEach(hero => {
           const tempHero: Hero = {
-            name: hero.data().name,
-            id: hero.data().id
+            id: hero.data().id,
+            name: hero.data().name
           };
           heroes.push(tempHero);
         });
@@ -42,8 +42,8 @@ export class HeroService {
       this.db.onSnapshot(heroesResults => {
         heroesResults.forEach(hero => {
           const tempHero: Hero = {
-            name: hero.data().name,
-            id: hero.data().id
+            id: hero.data().id,
+            name: hero.data().name
           };
 
           if (id === tempHero.id) {
@@ -64,8 +64,8 @@ export class HeroService {
         const heroes: Hero[] = [];
         heroesResults.forEach(hero => {
           const tempHero: Hero = {
-            name: hero.data().name,
-            id: hero.data().id
+            id: hero.data().id,
+            name: hero.data().name
           };
 
           if (term === tempHero.name) {
@@ -91,7 +91,9 @@ export class HeroService {
   deleteHero(hero: Hero): Observable<Hero> {
     this.db.onSnapshot(heroResults => {
       heroResults.forEach(heroResult => {
-        if (hero.id === heroResult.data().id) {
+        const heroResultId = heroResult.data().id;
+        const heroResultName = heroResult.data().name;
+        if (hero.id === heroResultId && hero.name === heroResultName) {
           this.db.doc(heroResult.id).delete();
         }
       });

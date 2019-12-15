@@ -26,7 +26,8 @@ export class HeroesComponent implements OnInit {
       return;
     }
 
-    const newId = Math.max(...this.heroes.map(hero => hero.id)) + 1;
+    const highestNumber = Math.max(...this.heroes.map(hero => hero.id)) + 1;
+    const newId = highestNumber < 0 ? 1 : highestNumber;
     const newHero = {
       name: newName,
       id: newId
@@ -39,6 +40,6 @@ export class HeroesComponent implements OnInit {
 
   delete(hero: Hero): void {
     this.heroes = this.heroes.filter(h => h !== hero);
-    this.heroService.deleteHero(hero);
+    this.heroService.deleteHero(hero).subscribe();
   }
 }
