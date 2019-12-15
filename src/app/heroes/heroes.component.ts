@@ -10,7 +10,7 @@ import { HeroService } from '../hero.service';
 export class HeroesComponent implements OnInit {
   heroes: Hero[];
 
-  constructor(private heroService: HeroService) { }
+  constructor(private heroService: HeroService) {}
 
   ngOnInit() {
     this.getHeroes();
@@ -27,13 +27,14 @@ export class HeroesComponent implements OnInit {
     }
 
     const newId = Math.max(...this.heroes.map(hero => hero.id)) + 1;
-
     const newHero = {
       name: newName,
       id: newId
     };
 
-    this.heroService.addHero(newHero);
+    this.heroService.addHero(newHero).subscribe(hero => {
+      this.heroes.push(hero);
+    });
   }
 
   delete(hero: Hero): void {
