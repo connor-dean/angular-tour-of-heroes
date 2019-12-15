@@ -1,6 +1,5 @@
-import { element } from 'protractor';
 import { Injectable } from '@angular/core';
-import { Observable, of, from } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 import { Hero } from './hero';
 import * as firebase from 'firebase/app';
@@ -14,32 +13,45 @@ export class HeroService {
 
   constructor(private messageService: MessageService) {}
 
-  getHeroRecords(): Hero[] {
-    const heroes = [];
-    this.db.onSnapshot(heroResults => {
-      heroResults.forEach(heroResult => {
-        const tempHero: Hero = {
-          name: heroResult.data().name,
-          id: heroResult.data().id
-        };
-        heroes.push(tempHero);
-      });
-    });
-    return heroes;
-  }
-
   getHeroes(): Observable<Hero[]> {
     this.messageService.add('HeroService: fetched heroes');
 
-    const heroes = this.getHeroRecords();
-    return of(heroes);
+    return new Observable(observer => {
+      this.db.onSnapshot(querySnapshot => {
+        const heroes: Hero[] = [];
+        querySnapshot.forEach(doc => {
+          const tempHero: Hero = {
+            name: doc.data().name,
+            id: doc.data().id
+          };
+          heroes.push(tempHero);
+        });
+
+        // Sort heroes by ID
+        heroes.sort((a, b) => {
+          return a.id - b.id;
+        });
+
+        observer.next(heroes);
+      });
+    });
   }
 
   getHero(id: number): Observable<Hero> {
-    this.messageService.add(`HeroService: fetched hero id=${id}`);
+    return new Observable(observer => {
+      this.db.onSnapshot(querySnapshot => {
+        querySnapshot.forEach(doc => {
+          const tempHero: Hero = {
+            name: doc.data().name,
+            id: doc.data().id
+          };
 
-    const heroes = this.getHeroRecords();
-    return of(heroes.find(hero => hero.id === id));
+          if (id === tempHero.id) {
+            observer.next(tempHero);
+          }
+        });
+      });
+    });
   }
 
   searchHeroes(term: string): Observable<Hero[]> {
@@ -47,9 +59,28 @@ export class HeroService {
       return of([]);
     }
 
-    const heroes = this.getHeroRecords();
-    const matchedHeros = heroes.filter(hero => hero.name === term);
-    return of(matchedHeros);
+    return new Observable(observer => {
+      this.db.onSnapshot(querySnapshot => {
+        const heroes: Hero[] = [];
+        querySnapshot.forEach(doc => {
+          const tempHero: Hero = {
+            name: doc.data().name,
+            id: doc.data().id
+          };
+
+          if (term === tempHero.name) {
+            heroes.push(tempHero);
+          }
+        });
+
+        // Sort heroes by ID
+        heroes.sort((a, b) => {
+          return a.id - b.id;
+        });
+
+        observer.next(heroes);
+      });
+    });
   }
 
   addHero(hero: Hero): Observable<Hero> {
