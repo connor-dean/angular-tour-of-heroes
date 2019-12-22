@@ -29,8 +29,8 @@ export class HeroesComponent implements OnInit {
     const highestNumber = Math.max(...this.heroes.map(hero => hero.id)) + 1;
     const newId = highestNumber < 0 ? 1 : highestNumber;
     const newHero = {
+      id: newId,
       name: newName,
-      id: newId
     };
 
     this.heroService.addHero(newHero).subscribe();

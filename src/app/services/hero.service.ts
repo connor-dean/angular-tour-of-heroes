@@ -20,10 +20,7 @@ export class HeroService {
       this.db.onSnapshot(heroesResults => {
         const heroes: Hero[] = [];
         heroesResults.forEach(hero => {
-          const tempHero: Hero = {
-            id: hero.data().id,
-            name: hero.data().name
-          };
+          const tempHero: Hero = this.mapResponseToHero(hero);
           heroes.push(tempHero);
         });
 
@@ -41,11 +38,7 @@ export class HeroService {
     return new Observable(observer => {
       this.db.onSnapshot(heroesResults => {
         heroesResults.forEach(hero => {
-          const tempHero: Hero = {
-            id: hero.data().id,
-            name: hero.data().name
-          };
-
+          const tempHero: Hero = this.mapResponseToHero(hero);
           if (id === tempHero.id) {
             observer.next(tempHero);
           }
@@ -63,11 +56,7 @@ export class HeroService {
       this.db.onSnapshot(heroesResults => {
         const heroes: Hero[] = [];
         heroesResults.forEach(hero => {
-          const tempHero: Hero = {
-            id: hero.data().id,
-            name: hero.data().name
-          };
-
+          const tempHero: Hero = this.mapResponseToHero(hero);
           if (term === tempHero.name) {
             heroes.push(tempHero);
           }
@@ -83,32 +72,26 @@ export class HeroService {
     });
   }
 
+  mapResponseToHero(hero: firebase.firestore.QueryDocumentSnapshot): Hero {
+    return {
+      id: hero.data().id,
+      documentId: hero.id,
+      name: hero.data().name
+    }
+  }
+
   addHero(hero: Hero): Observable<Hero> {
     this.db.add(hero);
     return of(hero);
   }
 
   deleteHero(hero: Hero): Observable<Hero> {
-    this.db.onSnapshot(heroResults => {
-      heroResults.forEach(heroResult => {
-        const heroResultId = heroResult.data().id;
-        const heroResultName = heroResult.data().name;
-        if (hero.id === heroResultId && hero.name === heroResultName) {
-          this.db.doc(heroResult.id).delete();
-        }
-      });
-    });
+    this.db.doc(hero.documentId).delete();
     return of(hero);
   }
 
-  updateHero(hero: Hero): Observable<any> {
-    this.db.onSnapshot(heroResults => {
-      heroResults.forEach(heroResult => {
-        if (hero.id === heroResult.data().id) {
-          this.db.doc(heroResult.id).update(hero);
-        }
-      });
-    });
+  updateHero(hero: Hero): Observable<Hero> {
+    this.db.doc(hero.documentId).update(hero);
     return of(hero);
   }
 
